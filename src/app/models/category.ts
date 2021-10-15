@@ -1,6 +1,5 @@
-export interface Category{
-  idCategory:number,
-  name:string,
-  icon:string,
-
+export interface Category {
+  idCategory: number;
+  name: string;
+  icon: string;
 }

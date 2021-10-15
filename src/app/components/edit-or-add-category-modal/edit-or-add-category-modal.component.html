@@ -1,0 +1,53 @@
+<clr-wizard #wizard [clrWizardOpen]="true">
+  <clr-wizard-title>{{
+    product ? "Edit Product" : "Add Product"
+  }}</clr-wizard-title>
+
+  <clr-wizard-button [type]="'cancel'" (click)="handleCancel()"
+    >Cancel</clr-wizard-button
+  >
+  <clr-wizard-button [type]="'previous'">Back</clr-wizard-button>
+  <clr-wizard-button [type]="'next'">Next</clr-wizard-button>
+  <clr-wizard-button [type]="'finish'" (click)="handleFinish()"
+    >Done</clr-wizard-button
+  >
+
+  <form [formGroup]="categoryForm" novalidate>
+    <clr-wizard-page>
+      <ng-template clrPageTitle>Category Infos</ng-template>
+      <clr-input-container>
+        <label>Category Name</label>
+        <input
+          id="name"
+          clrInput
+          placeholder="Category name..."
+          name="name"
+          formControlName="name"
+        />
+      </clr-input-container>
+
+      <clr-textarea-container>
+        <label>Icon</label>
+        <input
+          id="icon"
+          clrInput
+          placeholder="Catgeory icon..."
+          name="icon"
+          formControlName="icon"
+        />
+      </clr-textarea-container>
+
+      <ng-template clrPageButtons>
+        <clr-wizard-button [type]="'cancel'" (click)="handleCancel()"
+          >Cancel</clr-wizard-button
+        >
+        <clr-wizard-button
+          [type]="'finish'"
+          [clrWizardButtonDisabled]="isIllustrationInvalid"
+          (click)="handleFinish()"
+          >Finish</clr-wizard-button
+        >
+      </ng-template>
+    </clr-wizard-page>
+  </form>
+</clr-wizard>

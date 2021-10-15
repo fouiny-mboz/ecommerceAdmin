@@ -1,0 +1,42 @@
+<h1>List of Categories</h1>
+<button class="btn btn-outline btn-sm" (click)="addCategory()">
+  Add Category
+</button>
+
+<!--Modal Add or Edit-->
+<app-edit-or-add-product-modal
+  *ngIf="CategoryModalOpen"
+  [category]="selectedCategory"
+  (finish)="handleFinish()"
+>
+</app-edit-or-add-product-modal>
+<!-- end Modal Add or Edit-->
+
+<!-- Modal delete-->
+
+<!--end Modal delete-->
+<clr-datagrid>
+  <clr-dg-column [style.width.px]="50">ID</clr-dg-column>
+  <clr-dg-column [style.width.px]="100">Name</clr-dg-column>
+  <clr-dg-row *clrDgItems="let category of Category">
+    <!--action-->
+    <clr-dg-action-overflow>
+      <button class="action-item" (click)="onEdit(category)">Edit</button>
+      <button class="action-item" (click)="onDelete(category)">Delete</button>
+    </clr-dg-action-overflow>
+    <!--endAction-->
+    <clr-dg-cell>{{ category.idCategory }}</clr-dg-cell>
+    <clr-dg-cell>{{ category.name }}</clr-dg-cell>
+    <!-- pagination-->
+  </clr-dg-row>
+  <clr-dg-footer>
+    <clr-dg-pagination #pagination [clrDgPageSize]="10">
+      <clr-dg-page-size [clrPageSizeOptions]="[10, 20, 50, 100]"
+        >products per page</clr-dg-page-size
+      >
+      {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} of
+      {{ pagination.totalItems }} categories
+    </clr-dg-pagination>
+  </clr-dg-footer>
+</clr-datagrid>
+<!--endpagination -->

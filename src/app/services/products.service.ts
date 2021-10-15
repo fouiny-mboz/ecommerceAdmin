@@ -1,31 +1,61 @@
 import { Injectable } from '@angular/core';
 import { environment } from './../../environments/environment';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { Response } from '../models/response';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Product } from '../models/product';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductsService {
+  constructor(private fireServices: AngularFirestore) {}
 
-  private baseUrl = `${environment.api+'products'+'?API_KEY='+environment.api_key}`;
-  constructor(private http: HttpClient) { }
-
-  getProducts():Observable<Response>{
-    return this.http.get<Response>(this.baseUrl);
+  getProducts(): Observable<Product[]> {
+    return this.fireServices
+      .collection<Product>('product-collection')
+      .valueChanges();
   }
 
-  addProducts(product:Product):Observable<Response>{
-    let params = new FormData();
-    params.append('name', product.name);
-    params.append('description',product.description);
-    params.append('price','${product.price}');
-    params.append('stock', '${product.stock}');
-    params.append('category','${product.category}')
-    params.append('image',product.image);
+  getProductDoc(idProduct) {
+    return this.fireServices
+      .collection('product-collection')
+      .doc(idProduct)
+      .valueChanges();
+  }
 
-    return this.http.post<Response>(this.baseUrl, params);
+  addProducts(product: Product) {
+    return new Promise<any>((resolve, reject) => {
+      this.fireServices
+        .collection('product-collection')
+        .add(product)
+        .then(
+          (response) => {
+            console.log(response);
+          },
+          (error) => reject(error)
+        );
+    });
+  }
+
+  editProduct(product: Product, idProduct) {
+    return this.fireServices
+      .collection('product-collection')
+      .doc(idProduct)
+      .update({
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        Category: product.Category,
+        stock: product.stock,
+        image: product.image,
+        time: product.time,
+      });
+  }
+
+  deleteProduct(product) {
+    return this.fireServices
+      .collection('product-collection')
+      .doc(product.idProduct)
+      .delete();
   }
 }

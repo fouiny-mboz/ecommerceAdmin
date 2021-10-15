@@ -1,18 +1,53 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { Response } from '../models/response';
-
+import { Category } from './../models/category';
+import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoriesService {
+  constructor(private fireCat: AngularFirestore) {}
 
-  private baseUrl = `${environment.api+'category'+'?API_KEY='+environment.api_key}`;
-  constructor(private http: HttpClient) { }
+  getCategory(): Observable<Category[]> {
+    return this.fireCat.collection<Category>('categories').valueChanges();
+  }
 
-  getCategory():Observable<Response>{
-    return this.http.get<Response>(this.baseUrl);
+  getCategoryDoc(idCategory) {
+    return this.fireCat
+      .collection('category-collection')
+      .doc(idCategory)
+      .valueChanges();
+  }
+
+  addCategories(category: Category) {
+    return new Promise<any>((resolve, reject) => {
+      this.fireCat
+        .collection('category-collection')
+        .add(category)
+        .then(
+          (response) => {
+            console.log(response);
+          },
+          (error) => reject(error)
+        );
+    });
+  }
+
+  editCategory(category: Category, idCategory) {
+    return this.fireCat
+      .collection('categoryt-collection')
+      .doc(idCategory)
+      .update({
+        name: category.name,
+        icon: category.icon,
+      });
+  }
+
+  deleteCategory(category) {
+    return this.fireCat
+      .collection('category-collection')
+      .doc(category.idCategory)
+      .delete();
   }
 }

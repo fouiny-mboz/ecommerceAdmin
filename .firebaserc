@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "angular9crud-dc373": {
+      "hosting": {
+        "admiEcommerceAngulare": [
+          "angular9crud-dc373"
+        ]
+      }
+    }
+  }
+}
